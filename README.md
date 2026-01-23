@@ -67,7 +67,7 @@ int_T main(int_T argc, const char* argv[]) {
 - Subsystem Entry Point: `model_name.c > void model_name_step(void)`
 
 ### Compile Generated C Code
-1. Make Sure You Have [make](https://community.chocolatey.org/packages/make) on Your Machine.
+1. Make Sure You Have [make](https://community.chocolatey.org/packages/make) on Your Machine
 2. Navigate to Generated Folder Name: `model_name_ert_rtw`
 3. run
 ```bash
