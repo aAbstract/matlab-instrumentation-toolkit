@@ -8,7 +8,7 @@ coder.extrinsic("write");
 
 if coder.target("MATLAB") || coder.target("Sfun")
     ltbus_device = ML_Get_Device_Port();
-    ltbus_write_request = LTBus_Write_F32_Request(0xD05C, 4);
+    ltbus_write_request = LTBus_Write_F32_Request(0xD05C, pump);
     write(ltbus_device, ltbus_write_request, "uint8");
 else
     coder.ceval("HAL_Set_Pump", pump);

@@ -1,5 +1,8 @@
 clearvars;
 clear global;
 
-addpath('src');
-addpath('test');
+module = "LT_MC101";
+
+addpath("src");
+addpath("test");
+addpath(module);
