@@ -13,14 +13,14 @@ end
 
 coder.extrinsic("read", "write");
 
-MAG_ENC1_ABS = uint16(0); %#ok
-MAG_ENC1_VEL = single(0); %#ok
-MAG_ENC2_ABS = uint16(0); %#ok
-MAG_ENC2_VEL = single(0); %#ok
-TCH_GRID_X = single(0); %#ok
-TCH_GRID_Y = single(0); %#ok
-TCH_VEL_X = single(0); %#ok
-TCH_VEL_Y = single(0); %#ok
+MAG_ENC1_ABS = uint16(0);
+MAG_ENC1_VEL = single(0);
+MAG_ENC2_ABS = uint16(0);
+MAG_ENC2_VEL = single(0);
+TCH_GRID_X = single(0);
+TCH_GRID_Y = single(0);
+TCH_VEL_X = single(0);
+TCH_VEL_Y = single(0);
 
 conf = Get_Conf();
 packet_size = conf.LTBus_packet_size;

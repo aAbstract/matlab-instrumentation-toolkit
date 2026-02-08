@@ -9,10 +9,10 @@ end
 
 coder.extrinsic("read", "write");
 
-M1_POS_FB = int32(0); %#ok
-M1_SPD_FB = int32(0); %#ok
-MAG_ENC1_ABS = uint16(0); %#ok
-MAG_ENC1_VEL = single(0); %#ok
+M1_POS_FB = int32(0);
+M1_SPD_FB = int32(0);
+MAG_ENC1_ABS = uint16(0);
+MAG_ENC1_VEL = single(0);
 
 conf = Get_Conf();
 packet_size = conf.LTBus_packet_size;
