@@ -12,5 +12,5 @@ end
 
 computed_crc16 = LTBus_Compute_CRC16(buffer(1:size - 3), size - 3);
 packet_crc16 = typecast([buffer(size - 2), buffer(size - 1)], "uint16");
-is_valid = computed_crc16 == packet_crc16;
+is_valid = isequal(computed_crc16, packet_crc16);
 end

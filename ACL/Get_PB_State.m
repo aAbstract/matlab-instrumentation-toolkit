@@ -11,7 +11,7 @@ arguments (Output)
     TCH_VEL_Y (1, 1) single
 end
 
-coder.extrinsic("read", "write");
+coder.extrinsic("read", "write", "flush");
 
 MAG_ENC1_ABS = uint16(0);
 MAG_ENC1_VEL = single(0);
@@ -27,8 +27,26 @@ packet_size = conf.LTBus_packet_size;
 
 ltbus_device = ML_Get_Device_Port();
 persistent PB_init
+persistent last_MAG_ENC1_ABS
+persistent last_MAG_ENC1_VEL
+persistent last_MAG_ENC2_ABS
+persistent last_MAG_ENC2_VEL
+persistent last_TCH_GRID_X
+persistent last_TCH_GRID_Y
+persistent last_TCH_VEL_X
+persistent last_TCH_VEL_Y
 if isempty(PB_init)
     write(ltbus_device, [0x7B 0x01 0xEA 0x7E 0xD0 0x02 0x00 0x01 0x30 0x2D 0xAE 0x7D], "uint8");
+
+    last_MAG_ENC1_ABS = MAG_ENC1_ABS;
+    last_MAG_ENC1_VEL = MAG_ENC1_VEL;
+    last_MAG_ENC2_ABS = MAG_ENC2_ABS;
+    last_MAG_ENC2_VEL = MAG_ENC2_VEL;
+    last_TCH_GRID_X = TCH_GRID_X;
+    last_TCH_GRID_Y = TCH_GRID_Y;
+    last_TCH_VEL_X = TCH_VEL_X;
+    last_TCH_VEL_Y = TCH_VEL_Y;
+
     PB_init = true;
 end
 
@@ -43,11 +61,20 @@ while true
     end
 end
 
+response_packet = zeros(1, bytes_available, "uint8"); %#ok
 response_packet = uint8(read(ltbus_device, bytes_available, "uint8"));
-response_packet = response_packet(end-packet_size+1:end);
+response_packet = response_packet(bytes_available-packet_size+1:bytes_available);
 flush(ltbus_device);
-if response_packet(1) ~= 123 || response_packet(end) ~= 125
-    return
+if response_packet(1) ~= 0x7B || response_packet(packet_size) ~= 0x7D || ~LTBus_CheckCRC16(response_packet, uint16(packet_size))
+    MAG_ENC1_ABS = last_MAG_ENC1_ABS;
+    MAG_ENC1_VEL = last_MAG_ENC1_VEL;
+    MAG_ENC2_ABS = last_MAG_ENC2_ABS;
+    MAG_ENC2_VEL = last_MAG_ENC2_VEL;
+    TCH_GRID_X = last_TCH_GRID_X;
+    TCH_GRID_Y = last_TCH_GRID_Y;
+    TCH_VEL_X = last_TCH_VEL_X;
+    TCH_VEL_Y = last_TCH_VEL_Y;
+    return;
 end
 
 MAG_ENC1_ABS_offset = (0x034 + 8);
@@ -76,5 +103,14 @@ TCH_GRID_X = typecast(TCH_GRID_X_bytes, "single");
 TCH_GRID_Y = typecast(TCH_GRID_Y_bytes, "single");
 TCH_VEL_X = typecast(TCH_VEL_X_bytes, "single");
 TCH_VEL_Y = typecast(TCH_VEL_Y_bytes, "single");
+
+last_MAG_ENC1_ABS = MAG_ENC1_ABS;
+last_MAG_ENC1_VEL = MAG_ENC1_VEL;
+last_MAG_ENC2_ABS = MAG_ENC2_ABS;
+last_MAG_ENC2_VEL = MAG_ENC2_VEL;
+last_TCH_GRID_X = TCH_GRID_X;
+last_TCH_GRID_Y = TCH_GRID_Y;
+last_TCH_VEL_X = TCH_VEL_X;
+last_TCH_VEL_Y = TCH_VEL_Y;
 
 end
