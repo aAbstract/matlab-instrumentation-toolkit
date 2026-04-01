@@ -35,14 +35,23 @@ if isempty(LIP_init)
 end
 
 read_request = LTBus_Read_Request(0xD000, packet_size - 10);
+write(ltbus_device, read_request, "uint8");
 
+c = 0;
 while true
-    write(ltbus_device, read_request, "uint8");
+    if c >= 1E3
+        write(ltbus_device, read_request, "uint8");
+        c = 0;
+        continue;
+    end
+
     bytes_available = double(0); %#ok
     bytes_available = get(ltbus_device, "BytesAvailable");
     if bytes_available > 0
         break;
     end
+    pause(1E-6);
+    c = c + 1;
 end
 
 response_packet = zeros(1, bytes_available, "uint8"); %#ok
