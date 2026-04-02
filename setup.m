@@ -1,7 +1,7 @@
 clearvars;
 clear global;
 
-module = "ACL";
+module = "LT_TM200";
 
 addpath("src");
 addpath("test");
