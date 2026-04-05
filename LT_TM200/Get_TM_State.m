@@ -7,8 +7,8 @@ end
 
 coder.extrinsic("read", "write", "flush");
 
-LOAD = int16(0);
-GAUGE = single(0);
+LOAD = single(0);
+GAUGE = int16(0);
 
 conf = Get_Conf();
 packet_size = conf.LTBus_packet_size;
@@ -18,7 +18,7 @@ persistent TM_init
 persistent last_LOAD
 persistent last_GAUGE
 if isempty(TM_init)
-    write(ltbus_device, [0x7B 0x01 0xEA 0x0E 0xD0 0x02 0x00 0x03 0x00 0x1F 0x69 0x7D], "uint8");
+    % write(ltbus_device, [0x7B 0x01 0xEA 0x0E 0xD0 0x02 0x00 0x1B 0x00 0x4E 0x32 0x7D], "uint8");
 
     last_LOAD = LOAD;
     last_GAUGE = GAUGE;
@@ -60,10 +60,10 @@ LOAD_offset = (0x000 + 8);
 GAUGE_offset = (0x004 + 8);
 
 LOAD_bytes = response_packet(LOAD_offset:LOAD_offset + 3);
-GAUGE_bytes = response_packet(GAUGE_offset:GAUGE_offset + 3);
+GAUGE_bytes = response_packet(GAUGE_offset:GAUGE_offset + 1);
 
 LOAD = typecast(LOAD_bytes, "single");
-GAUGE = typecast(GAUGE_bytes, "single");
+GAUGE = typecast(GAUGE_bytes, "int16");
 
 last_LOAD = LOAD;
 last_GAUGE = GAUGE;
